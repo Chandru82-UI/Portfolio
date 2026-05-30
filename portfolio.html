@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0d0f;--surface:#15151a;--surface2:#1e1e26;
+  --border:#2a2a38;--accent:#7c6af5;--accent2:#f5a623;--accent3:#4ecdc4;
+  --text:#e8e8f0;--muted:#7a7a9a;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden}
+
+nav{position:fixed;top:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(13,13,15,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--mono);font-size:0.85rem;color:var(--accent);letter-spacing:0.05em}
+.nav-links{display:flex;gap:1.6rem;flex-wrap:wrap}
+.nav-links a{font-size:0.75rem;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;padding:0.5rem}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:5px}
+.hamburger span{width:25px;height:2px;background:var(--text);transition:all 0.3s;display:block}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(8px,8px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
+@media(max-width:768px){.hamburger{display:flex}.nav-links{display:none;position:absolute;top:60px;right:0;left:0;flex-direction:column;background:rgba(13,13,15,0.98);border-bottom:1px solid var(--border);padding:1rem;gap:0}.nav-links.active{display:flex}.nav-links a{padding:0.75rem 1rem;font-size:0.8rem;border-bottom:1px solid var(--border)}}
+
+.hero{min-height:100vh;display:flex;align-items:center;padding:6rem 2rem 5rem;max-width:1100px;margin:0 auto;position:relative}
+.hero-content{max-width:680px}
+@media(max-width:768px){.hero{padding:5.5rem 1.5rem 3rem}}
+@media(max-width:640px){.hero{padding:5rem 1rem 2rem;min-height:auto}}
+.hero-badge{font-family:var(--mono);font-size:0.75rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem}
+.hero-badge::before{content:'';width:28px;height:1px;background:var(--accent)}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:0.4;transform:scale(0.85)}50%{opacity:1;transform:scale(1.15)}}
+.hero h1{font-size:clamp(2.5rem,6vw,4.8rem);font-weight:700;line-height:1.05;margin-bottom:1.5rem;letter-spacing:-0.02em}
+.hero h1 .name{color:var(--accent)}
+.hero-sub{font-family:var(--mono);font-size:0.86rem;color:var(--muted);line-height:2;margin-bottom:2.5rem;max-width:500px}
+.hero-line{display:flex;align-items:center;gap:0.6rem}
+.chevron-icon{display:inline-flex;align-items:center;flex-shrink:0}
+.chevron-icon svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+@media(max-width:640px){.hero-cta{flex-direction:column;gap:0.75rem}.hero-cta .btn{width:100%;justify-content:center}}
+.btn{font-family:var(--mono);font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.72rem 1.65rem;border-radius:4px;cursor:pointer;text-decoration:none;transition:all 0.2s;display:inline-block;min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:640px){.btn{font-size:0.7rem;padding:0.65rem 1.2rem}}
+.btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+.btn-primary:hover{background:transparent;color:var(--accent)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.hero-code{position:absolute;right:0;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.7rem;color:var(--border);line-height:2;pointer-events:none;user-select:none}
+@media(max-width:800px){.hero-code{display:none}}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem}
+.scroll-hint span{font-family:var(--mono);font-size:0.66rem;color:var(--muted);letter-spacing:0.1em}
+.scroll-bar{width:1px;height:36px;background:linear-gradient(to bottom,var(--accent),transparent);animation:sf 2s ease-in-out infinite}
+@keyframes sf{0%,100%{opacity:0.3}50%{opacity:1}}
+
+.full-sec{border-top:1px solid var(--border)}
+.full-sec.alt{background:var(--surface)}
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+@media(max-width:768px){section{padding:3.5rem 1.5rem}}
+@media(max-width:640px){section{padding:2.5rem 1rem}}
+.sec-label{font-family:var(--mono);font-size:0.7rem;color:var(--accent);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.75rem}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);max-width:70px}
+.sec-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;margin-bottom:2.5rem;letter-spacing:-0.01em}
+
+/* SKILLS */
+.skill-cats{display:flex;flex-direction:column;gap:2.2rem}
+.cat-label{font-family:var(--mono);font-size:0.68rem;color:var(--accent2);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.85rem;display:flex;align-items:center;gap:0.4rem}
+.cat-label::before{content:'#';color:var(--muted)}
+.skill-row{display:flex;flex-wrap:wrap;gap:0.7rem}
+.skill-pill{font-family:var(--mono);font-size:0.76rem;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:0.5rem 1rem;display:flex;align-items:center;gap:0.5rem;transition:border-color 0.2s,color 0.2s,transform 0.15s;cursor:default;min-height:36px}
+@media(max-width:640px){.skill-pill{font-size:0.7rem;padding:0.45rem 0.85rem}}
+.skill-pill:hover{border-color:var(--accent);color:var(--text);transform:translateY(-2px)}
+.skill-pill .si{font-size:1rem}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(295px,1fr));gap:1.5rem}
+@media(max-width:768px){.proj-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.proj-grid{gap:1rem}}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.75rem;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s;display:flex;flex-direction:column}
+.proj-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.proj-num{font-family:var(--mono);font-size:0.67rem;color:var(--muted);margin-bottom:0.8rem;letter-spacing:0.1em}
+.proj-title{font-size:1.1rem;font-weight:600;margin-bottom:0.55rem}
+.proj-desc{font-family:var(--mono);font-size:0.79rem;color:var(--muted);line-height:1.75;margin-bottom:1.1rem;flex:1}
+.proj-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.3rem}
+.tag{font-family:var(--mono);font-size:0.67rem;background:var(--surface2);color:var(--muted);padding:0.26rem 0.62rem;border-radius:4px;border:1px solid var(--border)}
+.proj-links{display:flex;gap:1rem;margin-top:auto}
+.proj-link{font-family:var(--mono);font-size:0.72rem;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s;padding:0.4rem 0.5rem;min-height:36px}
+@media(max-width:640px){.proj-link{font-size:0.65rem}}
+.proj-link:hover{color:var(--accent2)}
+.proj-link svg{width:12px;height:12px}
+
+/* INTERNSHIPS */
+.intern-list{display:flex;flex-direction:column;gap:1.2rem}
+.intern-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem 1.75rem;display:grid;grid-template-columns:46px 1fr;gap:0 1.25rem;align-items:start;transition:border-color 0.2s}
+.intern-card:hover{border-color:var(--accent3)}
+.intern-logo{width:42px;height:42px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.25rem}
+.intern-role{font-weight:600;font-size:0.98rem;margin-bottom:0.2rem}
+.intern-co{font-family:var(--mono);font-size:0.76rem;color:var(--accent3);margin-bottom:0.45rem}
+.intern-meta{font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.7rem;display:flex;gap:1.25rem;flex-wrap:wrap}
+.intern-desc{font-family:var(--mono);font-size:0.79rem;color:var(--muted);line-height:1.75}
+
+/* CERTIFICATIONS */
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem}
+.cert-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.4rem;position:relative;transition:border-color 0.2s,transform 0.15s;display:flex;flex-direction:column}
+.cert-card:hover{border-color:var(--accent2);transform:translateY(-3px)}
+.cert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.cert-icon{font-size:1.55rem;margin-bottom:0.7rem}
+.cert-title{font-weight:600;font-size:0.93rem;margin-bottom:0.3rem;line-height:1.4}
+.cert-issuer{font-family:var(--mono);font-size:0.73rem;color:var(--accent2);margin-bottom:0.3rem}
+.cert-date{font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-bottom:0.9rem;flex:1}
+.cert-link{font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:0.35rem;transition:color 0.2s;margin-top:auto;padding:0.4rem;min-height:36px}
+@media(max-width:640px){.cert-link{font-size:0.65rem}}
+.cert-link:hover{color:var(--accent2)}
+.cert-link svg{width:11px;height:11px}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+@media(max-width:640px){.about-grid{grid-template-columns:1fr}}
+.about-text p{font-family:var(--mono);font-size:0.83rem;color:var(--muted);line-height:1.95;margin-bottom:1rem}
+.about-text p strong{color:var(--text)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.stat-grid{gap:0.75rem}}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+.stat-num{font-size:1.85rem;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.stat-label{font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-top:0.2rem}
+
+.tl{position:relative;padding-left:1.1rem;margin-top:1.5rem}
+.tl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:1.6rem;padding-left:1.4rem}
+.tl-item::before{content:'';position:absolute;left:-1.55rem;top:0.4rem;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.tl-date{font-family:var(--mono);font-size:0.68rem;color:var(--accent);margin-bottom:0.15rem}
+.tl-title{font-weight:600;font-size:0.92rem;margin-bottom:0.15rem}
+.tl-sub{font-family:var(--mono);font-size:0.76rem;color:var(--muted);line-height:1.6}
+
+/* CONTACT */
+.contact-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:3rem;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;overflow:hidden}
+@media(max-width:768px){.contact-box{padding:2rem}}
+@media(max-width:640px){.contact-box{padding:1.5rem}}
+.contact-box::after{content:'<hello />';position:absolute;bottom:-0.5rem;right:1rem;font-family:var(--mono);font-size:4.5rem;font-weight:700;color:var(--border);pointer-events:none;line-height:1}
+.contact-box h2{font-size:1.9rem;font-weight:700;margin-bottom:1rem}
+.contact-box p{font-family:var(--mono);font-size:0.83rem;color:var(--muted);margin-bottom:2rem;max-width:430px;line-height:1.75}
+.c-links{display:flex;gap:0.85rem;flex-wrap:wrap;justify-content:center}
+.c-link{font-family:var(--mono);font-size:0.76rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:0.58rem 1.15rem;border-radius:6px;transition:all 0.2s;display:flex;align-items:center;gap:0.45rem;min-height:44px}
+@media(max-width:640px){.c-link{font-size:0.7rem;padding:0.5rem 0.9rem}}
+.c-link:hover{border-color:var(--accent);color:var(--accent)}
+footer{border-top:1px solid var(--border);text-align:center;padding:1.75rem;font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
+.blink{animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+  NAV — edit logo text and links
+====================================================== -->
+<nav>
+  <div class="nav-logo">{ Chandru R.dev }</div><!-- EDIT: your name -->
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#projects">projects</a>
+    <a href="#internships">internships</a>
+    <a href="#certifications">certs</a>
+    <a href="#contact">contact</a>
+  </div>
+  <div class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</nav>
+
+<!-- =====================================================
+  HERO — edit name, tagline lines
+====================================================== -->
+<div style="position:relative;overflow:hidden">
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      Available for opportunities
+    </div>
+    <h1>Hi, I'm<br><span class="name">Chandru R</span><span class="blink">_</span></h1><!-- EDIT: Your Name -->
+    <div class="hero-sub">
+      <div class="hero-line">
+        <span class="chevron-icon">
+          <svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        </span>
+        Software Developer &amp; Fresher
+      </div>
+      <div class="hero-line">
+        <span class="chevron-icon">
+          <svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        </span>
+        Python · Java · JavaScript · SQL
+      </div>
+      <div class="hero-line">
+        <span class="chevron-icon">
+          <svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        </span>
+        Building things. Breaking things. Learning always.<!-- EDIT: your tagline -->
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View My Work</a>
+      <a href="#contact" class="btn btn-outline">Let's Talk</a>
+    </div>
+  </div>
+  <pre class="hero-code">
+def developer():
+    name   = "Chandru R"
+    status = "open_to_work"
+    skills = [
+        "Python", "Java", "SQL",
+        "HTML", "CSS", "JavaScript",
+        "Node.js", "Flask", "Git"
+    ]
+    return build(skills)
+
+# Output: Ready to ship 🚀
+  </pre>
+</div>
+<div class="scroll-hint">
+  <div class="scroll-bar"></div>
+  <span>scroll</span>
+</div>
+</div>
+
+<!-- =====================================================
+  ABOUT — edit paragraphs, timeline entries, stat numbers
+====================================================== -->
+<div class="full-sec alt" id="about">
+<section>
+  <div class="sec-label">01 — about</div>
+  <h2 class="sec-title">A bit about me</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <!-- EDIT: Write your own 2-3 paragraphs below -->
+      <p>I'm a <strong>fresh Computer Science graduate</strong> who loves turning ideas into working software. I'm comfortable across the stack — from writing SQL queries to building web UIs.</p>
+      <p>My 3 personal projects have been my real classroom — debugging errors at midnight, pushing broken code to GitHub, fixing it, and learning why it broke. <strong>That process is what excites me.</strong></p>
+      <p>I'm currently <strong>looking for my first developer role</strong> where I can grow fast, contribute meaningfully, and work with people who love what they build.</p>
+      <!-- EDIT: Update year, degree, college for each timeline item. Add/remove .tl-item freely -->
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-date">2022-2026</div>
+          <div class="tl-title">B.Tech — Computer Science and Engineering</div>
+          <div class="tl-sub">Bharath Institute of Higher Education and Research · Chennai, Tamil Nadu</div>
+        </div>
+      </div>
+    </div>
+    <!-- EDIT: Change numbers in stat-num to match your real counts -->
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Projects built</div></div>
+      <div class="stat-box"><div class="stat-num">9+</div><div class="stat-label">Technologies</div></div>
+      <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Certifications</div></div>
+      <div class="stat-box"><div class="stat-num">2</div><div class="stat-label">Internships</div></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- =====================================================
+  SKILLS — categorized
+  HOW TO EDIT:
+  - Add a skill → copy a <div class="skill-pill"> and paste inside the right .skill-row
+  - Remove a skill → delete its <div class="skill-pill"> line
+  - Add a new category → copy a full category <div> block and change the cat-label text
+====================================================== -->
+<div class="full-sec" id="skills">
+<section>
+  <div class="sec-label">02 — skills</div>
+  <h2 class="sec-title">Tech I work with</h2>
+  <div class="skill-cats">
+
+    <!-- LANGUAGES -->
+    <div>
+      <div class="cat-label">languages</div>
+      <div class="skill-row">
+        <div class="skill-pill"><span class="si">🐍</span> Python</div>
+        <div class="skill-pill"><span class="si">☕</span> Java</div>
+        <div class="skill-pill"><span class="si">⚡</span> JavaScript</div>
+        <div class="skill-pill"><span class="si">🗄️</span> SQL</div>
+        <!-- ADD: <div class="skill-pill"><span class="si">💎</span> Ruby</div> -->
+      </div>
+    </div>
+
+    <!-- FRONTEND -->
+    <div>
+      <div class="cat-label">frontend</div>
+      <div class="skill-row">
+        <div class="skill-pill"><span class="si">🌐</span> HTML5</div>
+        <div class="skill-pill"><span class="si">🎨</span> CSS3</div>
+        <!-- ADD: <div class="skill-pill"><span class="si">⚛️</span> React</div> -->
+      </div>
+    </div>
+
+    <!-- BACKEND -->
+    <div>
+      <div class="cat-label">backend</div>
+      <div class="skill-row">
+        <div class="skill-pill"><span class="si">🟢</span> Node.js</div>
+        <div class="skill-pill"><span class="si">🌶️</span> Flask</div>
+        <!-- ADD: <div class="skill-pill"><span class="si">🔵</span> Express.js</div> -->
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div>
+      <div class="cat-label">tools &amp; devops</div>
+      <div class="skill-row">
+        <div class="skill-pill"><span class="si">🔀</span> Git</div>
+        <div class="skill-pill"><span class="si">🐙</span> GitHub</div>
+        <div class="skill-pill"><span class="si">🐧</span> Linux</div>
+        <div class="skill-pill"><span class="si">🐳</span> Docker</div>
+        <!-- ADD: <div class="skill-pill"><span class="si">☁️</span> AWS</div> -->
+      </div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- =====================================================
+  PROJECTS
+  HOW TO EDIT:
+  - Change proj-num comment, proj-title, proj-desc, tags, and href links
+  - ADD a project → copy a full .proj-card block and paste inside .proj-grid
+  - REMOVE a project → delete the full .proj-card block
+  - Update href="#" with your actual GitHub repo URL and live demo URL
+====================================================== -->
+<div class="full-sec alt" id="projects">
+<section>
+  <div class="sec-label">03 — projects</div>
+  <h2 class="sec-title">Things I've built</h2>
+  <div class="proj-grid">
+
+    <!-- PROJECT 1 ── EDIT below ── -->
+    <div class="proj-card">
+      <div class="proj-num">// project_01</div>
+      <div class="proj-title">Hybrid Blockchain Distributed File System with MetaMask Authentication for Secure and Auditable System</div><!-- EDIT -->
+      <div class="proj-desc">
+        Developed a decentralized file system leveraging blockchain technology for secure and auditable data storage with MetaMask integration.
+      </div>
+      <div class="proj-tags">
+        <span class="tag">Javascript</span><!-- EDIT tags -->
+        <span class="tag">Solidity</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <!-- ADD: <span class="tag">Flask</span> -->
+      </div>
+      <div class="proj-links">
+        <a href="#" class="proj-link"><!-- EDIT href with GitHub URL -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <!--<a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Live Demo
+        </a> -->
+      </div>
+    </div>
+
+    <!-- PROJECT 2 ── EDIT below ── -->
+    <div class="proj-card">
+      <div class="proj-num">// project_02</div>
+      <div class="proj-title">Regenerative Approaches in Neurology : Stem Cell Mediated Neural Repair and Functional Recovery for Central Nervous System </div>
+      <div class="proj-desc">
+        Developed an AI-based stem cell classification system using microscopic images of MSC, NSC, and IPFC to support regenerative therapy research for Parkinson's disease.
+      </div>
+      <div class="proj-tags">
+        <span class="tag">Python</span>
+        <span class="tag">TensorFlow</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+      </div>
+      <div class="proj-links">
+        <a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <!--<a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Live Demo
+        </a> -->
+      </div>
+    </div>
+
+    <!-- PROJECT 3 ── EDIT below ── -->
+    <div class="proj-card">
+      <div class="proj-num">// project_03</div>
+      <div class="proj-title">Credit Card Fraud Detection</div>
+      <div class="proj-desc">
+        Developed a machine learning model to detect fraudulent credit card transactions in real-time.
+      </div>
+      <div class="proj-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Scikit-learn</span>
+        <span class="tag">Pandas</span>
+      </div>
+      <div class="proj-links">
+        <a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <!-- <a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Live Demo
+        </a> -->
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">// project_04</div>
+      <div class="proj-title">Virtual Fruit Ninja Using Hand Gestures</div>
+      <div class="proj-desc">
+        This project is a virtual version of the popular mobile game "Fruit Ninja" that uses hand gestures for interaction. It provides an engaging and interactive gaming experience without the need for physical controllers.
+      </div>
+      <div class="proj-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Open CV</span>
+        <span class="tag">Pandas</span>
+      </div>
+      <div class="proj-links">
+        <a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
+        <!-- <a href="#" class="proj-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Live Demo
+        </a>  -->
+      </div>
+    </div>
+
+    <!-- ADD MORE PROJECTS: copy any .proj-card block above and paste here -->
+
+  </div>
+</section>
+</div>
+
+<!-- =====================================================
+  INTERNSHIPS
+  HOW TO EDIT:
+  - Edit intern-logo emoji, intern-role, intern-co (company), intern-meta (dates, location, duration), intern-desc
+  - ADD internship → copy an .intern-card block and paste inside .intern-list
+  - No internship yet? Delete this entire <div class="full-sec"> block
+====================================================== -->
+<div class="full-sec" id="internships">
+<section>
+  <div class="sec-label">04 — internships</div>
+  <h2 class="sec-title">Where I've worked</h2>
+  <div class="intern-list">
+
+    <!-- INTERNSHIP 1 ── EDIT below ── -->
+    <div class="intern-card">
+      <div class="intern-logo">🏢</div><!-- EDIT: change emoji to match company feel -->
+      <div>
+        <div class="intern-role">Data Science Intern</div><!-- EDIT: your role title -->
+        <div class="intern-co">Gradtwin Services Pvt Ltd</div><!-- EDIT: company name -->
+        <div class="intern-meta">
+          <span>📅 Nov 2025 – Mar 2026</span><!-- EDIT: start and end month/year -->
+          <span>📍 Chennai / Remote</span><!-- EDIT: city or Remote -->
+          <span>⏱ 5 months</span><!-- EDIT: duration -->
+        </div>
+        <div class="intern-desc">
+          <!-- EDIT: Describe your work in 2-3 sentences. What did you build? What tech did you use? -->
+          Worked on [task/module]. Used Python and SQL to [what you did]. Contributed to
+          [feature/codebase] and learned [something real and specific].
+        </div>
+      </div>
+    </div>
+    <div class="intern-card">
+      <div class="intern-logo">🏢</div><!-- EDIT: change emoji to match company feel -->
+      <div>
+        <div class="intern-role">Computer Vision Intern</div><!-- EDIT: your role title -->
+        <div class="intern-co">National Small Industries Centre</div><!-- EDIT: company name -->
+        <div class="intern-meta">
+          <span>📅 Jun 2025 – Jul 2025</span><!-- EDIT: start and end month/year -->
+          <span>📍 Chennai / Remote</span><!-- EDIT: city or Remote -->
+          <span>⏱ 1 month</span><!-- EDIT: duration -->
+        </div>
+        <div class="intern-desc">
+          <!-- EDIT: Describe your work in 2-3 sentences. What did you build? What tech did you use? -->
+          Worked on [task/module]. Used Python and SQL to [what you did]. Contributed to
+          [feature/codebase] and learned [something real and specific].
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD MORE INTERNSHIPS: copy the .intern-card block above and paste here -->
+
+  </div>
+</section>
+</div>
+
+<!-- =====================================================
+  CERTIFICATIONS
+  HOW TO EDIT:
+  - Edit cert-icon emoji, cert-title, cert-issuer, cert-date, and href link
+  - ADD cert → copy a .cert-card block and paste inside .certs-grid
+  - REMOVE cert → delete a .cert-card block
+  - Replace href="#" with your actual Coursera / Credly / certificate URL
+====================================================== -->
+<div class="full-sec alt" id="certifications">
+<section>
+  <div class="sec-label">05 — certifications</div>
+  <h2 class="sec-title">What I've earned</h2>
+  <div class="certs-grid">
+
+    <!-- CERT 1 ── EDIT below ── -->
+    <div class="cert-card">
+      <div class="cert-icon">🐍</div><!-- EDIT: emoji matching subject -->
+      <div class="cert-title">Data Analytics - Job Simulation</div><!-- EDIT: certificate name -->
+      <div class="cert-issuer">Deloitte Australia</div><!-- EDIT: issuer -->
+      <div class="cert-date">Issued: Jan 2026</div><!-- EDIT: date -->
+      <a href="#" class="cert-link" target="_blank"><!-- EDIT: href = credential URL -->
+        View Credential
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+
+    <!-- CERT 2 ── EDIT below ── -->
+    <div class="cert-card">
+      <div class="cert-icon">🌐</div>
+      <div class="cert-title">Full Stack Java Development</div>
+      <div class="cert-issuer">Wipro</div>
+      <div class="cert-date">Issued: Jul 2025</div>
+      <a href="#" class="cert-link" target="_blank">
+        View Credential
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+
+    <!-- CERT 3 ── EDIT below ── -->
+    <div class="cert-card">
+      <div class="cert-icon">🗄️</div>
+      <div class="cert-title">Google AI-ML Virtual Internship</div>
+      <div class="cert-issuer">Eduskills</div>
+      <div class="cert-date">Issued: May 2025</div>
+      <a href="#" class="cert-link" target="_blank">
+        View Credential
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+
+    <!-- ADD MORE CERTS: copy a .cert-card block above and paste here -->
+
+  </div>
+</section>
+</div>
+
+<!-- =====================================================
+  CONTACT — edit email, GitHub URL, LinkedIn URL
+====================================================== -->
+<div class="full-sec" id="contact">
+<section>
+  <div class="sec-label">06 — contact</div>
+  <div class="contact-box">
+    <h2>Let's connect<span class="blink">_</span></h2>
+    <p>I'm actively looking for my first developer role. Internship, full-time, or just a chat about code — my inbox is open.</p>
+    <a href="chandruranganathan2@gmail.com" class="btn btn-primary" style="margin-bottom:1.75rem">Say Hello →</a><!-- EDIT: your email -->
+    <div class="c-links">
+      <a href="https://github.com/Chandru82-UI" class="c-link" target="_blank"><!-- EDIT -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <a href="https://linkedin.com/in/chandru82" class="c-link" target="_blank"><!-- EDIT -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="resume.pdf" class="c-link" download><!-- EDIT: update filename if different -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Download CV
+      </a>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- EDIT: change Your Name and year -->
+<footer>
+  <p>Designed &amp; built by <strong>Chandru R</strong> · 2026</p>
+  <p style="margin-top:0.4rem;font-size:0.64rem">Made with HTML · CSS · JS · too much coffee ☕</p>
+</footer>
+
+<script>
+// Hamburger menu toggle
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+const navItems = document.querySelectorAll('.nav-links a');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  navLinks.classList.toggle('active');
+});
+
+// Close menu when a link is clicked
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    navLinks.classList.remove('active');
+  });
+});
+
+// Section highlight on scroll
+const sections = document.querySelectorAll('[id]');
+const links = document.querySelectorAll('.nav-links a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      links.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if(active) active.classList.add('active');
+    }
+  });
+},{threshold:0.35});
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
